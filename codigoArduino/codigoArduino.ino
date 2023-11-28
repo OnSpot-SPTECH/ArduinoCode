@@ -9,9 +9,9 @@
 
 #include "DHT.h"
 
-#define DHTPIN A1
-#define LM35PIN A5
-#define LUMIPIN A0
+#define DHTPIN A0
+#define LM35PIN A1
+#define LUMIPIN A2
 #define CHAVPIN 7
 
 
@@ -31,22 +31,22 @@ void loop() {
   Serial.print(dht11_temperatura);
   Serial.print(",");
 
-  float luminosidade = analogRead(LUMIPIN);
-  Serial.print(luminosidade);
-  Serial.print(",");
+  // float luminosidade = analogRead(LUMIPIN);
+  // Serial.print(luminosidade);
+  // Serial.print(",");
 
   float lm35_temperatura = analogRead(LM35PIN);
   lm35_temperatura = lm35_temperatura * 0.00488;
   lm35_temperatura = lm35_temperatura * 100;
   Serial.print(lm35_temperatura);
-  Serial.print(",");
-  
-  int chave = digitalRead(7);
-  if (chave == 0) {
-    Serial.print("1");
-  } else {
-    Serial.print("0");
-  }
   Serial.println();
+
+  
+  // int chave = digitalRead(7);
+  // if (chave == 0) {
+  //   Serial.print("1");
+  // } else {
+  //   Serial.print("0");
+  // }
   delay(2000);
 }
