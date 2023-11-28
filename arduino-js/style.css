@@ -1,0 +1,7 @@
+.graficos{
+    display: flex;
+    height: 500px;
+}
+h1{
+    font-size: 20px;
+}

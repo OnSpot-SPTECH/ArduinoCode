@@ -19,7 +19,7 @@ const serial = async (
             port: 3306,
             user: 'root',
             password: 'sptech',
-            database: 'metricas'
+            database: 'onspot2'
         }
     ).promise();
 
@@ -41,20 +41,22 @@ const serial = async (
         const valores = data.split(',');
         const dht11Umidade = parseFloat(valores[0]);
         const dht11Temperatura = parseFloat(valores[1]);
-        const luminosidade = parseFloat(valores[2]);
-        const lm35Temperatura = parseFloat(valores[3]);
-        const chave = parseInt(valores[4]);
+        const dataHoraAtual = new Date();
+        const dataHoraFormatada = formatarDataHora(dataHoraAtual);
+        const luminosidade = parseFloat(valores[3]);
+        const lm35Temperatura = parseFloat(valores[2]);
+        const chave = parseFloat(valores[4]);
 
         valoresDht11Umidade.push(dht11Umidade);
-        valoresDht11Temperatura.push(dht11Temperatura);
+        valoresDht11Temperatura.push(lm35Temperatura);
         valoresLuminosidade.push(luminosidade);
         valoresLm35Temperatura.push(lm35Temperatura);
         valoresChave.push(chave);
 
         if (HABILITAR_OPERACAO_INSERIR) {
             await poolBancoDados.execute(
-                'INSERT INTO sensores (dht11_umidade, dht11_temperatura, luminosidade, lm35_temperatura, chave) VALUES (?, ?, ?, ?, ?)',
-                [dht11Umidade, dht11Temperatura, luminosidade, lm35Temperatura, chave]
+                'INSERT INTO registro (temperatura, umidade, data_hora) VALUES(?,?,?)',
+                [lm35Temperatura, dht11Umidade, dataHoraFormatada]
             );
         }
 
@@ -118,3 +120,18 @@ const servidor = (
         valoresChave
     );
 })();
+
+    function formatarDataHora(data) {
+        const ano = data.getFullYear();
+        const mes = padZero(data.getMonth() + 1);
+        const dia = padZero(data.getDate());
+        const horas = padZero(data.getHours());
+        const minutos = padZero(data.getMinutes());
+        const segundos = padZero(data.getSeconds());
+
+        return `${ano}-${mes}-${dia} ${horas}:${minutos}:${segundos}`;
+}
+
+    function padZero(valor) {
+        return valor < 10 ? `0${valor}` : valor;
+    }
